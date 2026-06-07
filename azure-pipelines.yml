@@ -23,3 +23,19 @@ steps:
     ./mvnw clean package -DskipTests
   displayName: 'Build metrics service'
 
+- script: |
+    echo $(DOCKER_PASSWORD) | docker login -u $(DOCKER_USERNAME) --password-stdin
+  displayName: 'Docker Login'
+
+- script: |
+    docker build -t $(DOCKER_USERNAME)/monitor-service:latest monitor-service
+    docker push $(DOCKER_USERNAME)/monitor-service:latest
+  displayName: 'Build & Push Monitor Image'
+
+- script: |
+    docker build -t $(DOCKER_USERNAME)/metrics-service:latest metrics-service/metrics-service
+    docker push $(DOCKER_USERNAME)/metrics-service:latest
+  displayName: 'Build & Push Metrics Image'
+
+
+
