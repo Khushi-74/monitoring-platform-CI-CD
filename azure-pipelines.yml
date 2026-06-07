@@ -10,10 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    cd monitor-service
+    chmod +x mvnw
+    ./mvnw clean package
+  displayName: 'Build monitor service'
+
+- script: |
+    cd metrics-service/metrics-service
+    chmod +x mvnw
+    ./mvnw clean package
+  displayName: 'Build metrics service'
+
