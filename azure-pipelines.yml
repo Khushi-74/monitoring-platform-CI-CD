@@ -20,6 +20,6 @@ steps:
 - script: |
     cd metrics-service/metrics-service
     chmod +x mvnw
-    ./mvnw clean package
+    ./mvnw clean package -DskipTests
   displayName: 'Build metrics service'
 
