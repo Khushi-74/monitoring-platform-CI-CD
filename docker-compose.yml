@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: metrics-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: metricsdb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "3306:3306"
+    networks:
+      - monitoring-net
+
+  metrics-service:
+    build: ./metrics-service/metrics-service
+    container_name: metrics-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  monitor-service:
+    build: ./monitor-service
+    container_name: monitor-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - metrics-service
+    networks:
+      - monitoring-net
+
+networks:
+  monitoring-net:
