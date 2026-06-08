@@ -28,13 +28,17 @@ steps:
   displayName: 'Docker Login'
 
 - script: |
-    docker build -t $(DOCKER_USERNAME)/monitor-service:latest monitor-service
+    docker build -t $(DOCKER_USERNAME)/monitor-service:$(Build.BuildId) monitor-service
+    docker tag \
+    $(DOCKER_USERNAME)/monitor-service:$(Build.BuildId) \
+    $(DOCKER_USERNAME)/monitor-service:latest
+    docker push $(DOCKER_USERNAME)/monitor-service:$(Build.BuildId)
     docker push $(DOCKER_USERNAME)/monitor-service:latest
   displayName: 'Build & Push Monitor Image'
 
 - script: |
-    docker build -t $(DOCKER_USERNAME)/metrics-service:latest metrics-service/metrics-service
-    docker push $(DOCKER_USERNAME)/metrics-service:latest
+    docker build -t $(DOCKER_USERNAME)/metrics-service:$(Build.BuildId) metrics-service/metrics-service
+    docker push $(DOCKER_USERNAME)/metrics-service:$(Build.BuildId)
   displayName: 'Build & Push Metrics Image'
 
 
